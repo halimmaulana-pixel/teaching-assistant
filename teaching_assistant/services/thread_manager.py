@@ -80,3 +80,74 @@ async def create_assignment_threads(guild, assignment: dict) -> dict:
             results[class_channel_name] = {"status": "error", "error": str(e)}
 
     return results
+
+def format_group_thread_content(assignment: dict) -> str:
+    """Format the group assignment thread post content with instructions."""
+    deadline = assignment.get("deadline", "Belum ditentukan")
+    grading_prompt = assignment.get("grading_prompt", "")
+
+    content = f"""📋 **TUGAS KELOMPOK: {assignment['title']}**
+
+{assignment.get('description', 'Tidak ada deskripsi')}
+
+⏰ **Deadline:** {deadline}
+
+══════════════════════════════════════
+📝 **FORMAT SUBMISSION (WAJIB IKUTI):**
+══════════════════════════════════════
+
+```
+Nama Tim: [nama_tim]
+Link Repo: [url]
+Link Deploy: [url]
+Job Desc: [project description - tech stack, database, framework, dll]
+---
+NIM: [nim_ketua] - Job Desc: [role]
+NIM: [nim_2] - Job Desc: [role]
+NIM: [nim_3] - Job Desc: [role]
+NIM: [nim_4] - Job Desc: [role]
+NIM: [nim_5] - Job Desc: [role]
+```
+
+⚠️ **IMPORTANT:**
+• HANYA 1 SUBMISSION yang diterima (yang pertama)
+• Submit EXACTLY sesuai format di atas
+• WAJIB 5 ANGGOTA KELOMPOK (1 Ketua + 4 Anggota)
+
+══════════════════════════════════════"""
+    if grading_prompt:
+        content += f"\n📌 **Catatan Grading:**\n{grading_prompt}\n"
+
+    return content.strip()
+
+async def create_group_assignment_threads(guild, assignment: dict) -> dict:
+    """Create threads for group assignment in all class channels."""
+    classes = assignment.get("classes", [])
+    title_slug = slugify(assignment["title"])
+    results = {}
+
+    for class_channel_name in classes:
+        class_channel = discord.utils.get(guild.text_channels, name=class_channel_name)
+        if not class_channel:
+            logger.warning(f"Channel not found: {class_channel_name}")
+            results[class_channel_name] = {"status": "not_found"}
+            continue
+
+        thread_name = f"tugas-kelompok-{title_slug}"
+        try:
+            thread = await class_channel.create_thread(
+                name=thread_name,
+                type=discord.ChannelType.public_thread,
+                reason=f"Group Assignment: {assignment['title']}"
+            )
+
+            thread_content = format_group_thread_content(assignment)
+            await thread.send(thread_content)
+
+            results[class_channel_name] = {"status": "created", "thread_id": thread.id}
+            logger.info(f"Group thread created: {thread_name} in #{class_channel_name}")
+        except Exception as e:
+            logger.error(f"Failed to create group thread in #{class_channel_name}: {e}")
+            results[class_channel_name] = {"status": "error", "error": str(e)}
+
+    return results
