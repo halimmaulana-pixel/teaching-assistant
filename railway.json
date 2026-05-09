@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "command": "pip install -r requirements.txt && python teaching_assistant/main.py"
+    "command": "pip install -r requirements.txt && PYTHONPATH=. python teaching_assistant/main.py"
   }
 }
