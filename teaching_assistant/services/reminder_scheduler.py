@@ -28,7 +28,7 @@ def get_reminder_message() -> str:
     """Generate reminder message with project ideas."""
     import random
 
-    ideas_text = "\n".join([f"{i+1}. {idea}" for i, idea in enumerate(random.sample(PROJECT_IDEAS, min(5, len(PROJECT_IDEAS)))])
+    ideas_text = "\n".join([f"{i+1}. {idea}" for i, idea in enumerate(random.sample(PROJECT_IDEAS, min(5, len(PROJECT_IDEAS))))])
 
     message = f"""
 ⏰ **Reminder: Project Full Stack Web Programming**
