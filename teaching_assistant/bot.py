@@ -37,6 +37,16 @@ class Bot:
             logger.info(f"Bot connected: {self.client.user.name}#{self.client.user.discriminator}")
             logger.info(f"Guild ID: {self.guild_id}")
 
+            asyncio.create_task(self.start_reminder_scheduler())
+
+        async def start_reminder_scheduler(self):
+            """Start the project idea reminder scheduler."""
+            from teaching_assistant.services.reminder_scheduler import start_reminder_scheduler
+            try:
+                await start_reminder_scheduler(self, interval_hours=2)
+            except Exception as e:
+                logger.error(f"Reminder scheduler error: {e}")
+
         @self.client.event
         async def on_message(message: discord.Message):
             await self.handle_message(message)

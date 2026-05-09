@@ -13,13 +13,14 @@ async def handle_create_group_assignment(message, bot_instance):
     from teaching_assistant.commands.assignment import parse_assignment_command
     args = parse_assignment_command(content)
 
-    required = ["title", "deadline", "classes"]
+    required = ["title", "deadline"]
     missing = [k for k in required if k not in args]
     if missing:
-        await message.reply(f"❌ Missing required fields: {', '.join(missing)}\n\nUsage:\n```!create-group-assignment title:\"...\" deadline:\"...\" classes:\"d1-si,c1-si\"```")
+        await message.reply(f"❌ Missing required fields: {', '.join(missing)}\n\nUsage:\n```!create-group-assignment title:\"...\" deadline:\"...\"```")
         return
 
-    classes = [c.strip() for c in args["classes"].split(",")]
+    default_classes = ["d1-si", "c1-si", "e1-si", "g1-si", "a2-si", "h1-si", "a1-si", "b1-si", "f1-si"]
+    classes = [c.strip() for c in args.get("classes", ",".join(default_classes)).split(",")]
 
     from teaching_assistant.services.database import create_assignment, init_db
     await init_db()
