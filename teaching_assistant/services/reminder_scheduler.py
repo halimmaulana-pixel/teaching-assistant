@@ -7,21 +7,20 @@ from datetime import datetime
 logger = logging.getLogger("teaching-assistant")
 
 PROJECT_IDEAS = [
-    "💻 **E-Commerce Platform** - Frontend: React + Tailwind, Backend: Node.js + Express, Database: PostgreSQL, Payment: Stripe",
-    "🛒 **Marketplace Lokal** - Frontend: Next.js, Backend: Go + Gin, Database: MongoDB, Deploy: Vercel",
-    "📚 **LMS (Learning Management System)** - Frontend: Vue.js + Nuxt, Backend: Laravel + MySQL, Database: Redis, CDN: Cloudflare",
-    "🏥 **Sistem Rumah Sakit** - Frontend: React + Material UI, Backend: Spring Boot + PostgreSQL, Database: FHIR API",
-    "🏋️ **Fitness Tracker App** - Frontend: Svelte + SvelteKit, Backend: FastAPI + SQLAlchemy, Database: PostgreSQL + TimescaleDB",
-    "🍽️ **Restaurant Reservation** - Frontend: React + Chakra UI, Backend: Django + DRF, Database: PostgreSQL, Maps: Google Maps API",
-    "🎓 **Quiz Platform** - Frontend: Angular + RxJS, Backend: Express + NestJS, Database: MongoDB, Real-time: Socket.io",
-    "📝 **Project Management Tool** - Frontend: React + Redux Toolkit, Backend: Rails + PostgreSQL, Database: Elasticsearch",
-    "🚗 **Rental Kendaraan** - Frontend: Next.js + Prisma, Backend: tRPC + Node.js, Database: PostgreSQL, Auth: Clerk",
-    "🏠 **Property Listing** - Frontend: Gatsby + GraphQL, Backend: Python + Django, Database: PostgreSQL + Algolia",
-    "💬 **Chat App Real-time** - Frontend: React + Socket.io Client, Backend: Node.js + Socket.io, Database: Redis + MongoDB",
-    "📊 **Dashboard Analytics** - Frontend: React + Recharts, Backend: FastAPI + Pandas, Database: PostgreSQL + Grafana",
-    "🎬 **Movie Streaming Platform** - Frontend: Vue 3 + Pinia, Backend: Go + gRPC, Database: PostgreSQL, CDN: AWS CloudFront",
-    "🧗 **Outdoor Activity Booking** - Frontend: SvelteKit + Tailwind, Backend: Rust + Actix, Database: SQLite + Redis",
-    "🌱 **Organic Food Delivery** - Frontend: Next.js + Stripe, Backend: Node.js + NestJS, Database: PostgreSQL + Prisma",
+    "📈 **Indonesian Commodity Price Tracker** - Frontend: Next.js + Tailwind, Backend: FastAPI + BeautifulSoup, Database: PostgreSQL, Data: Scraping BPS/Pasarpedia - Pantau harga beras, cabai, bawang real-time",
+    "🎓 **Indonesian Scholarship Aggregator** - Frontend: React + Prisma, Backend: Node.js + Express, Database: MongoDB, Data: Scraping LPDP/Kemdikbud - Kumpulkan semua scholarship, filter by requirements, deadline tracker",
+    "✈️ **Flight Price Hunter (Indonesia-focus)** - Frontend: Next.js + Recharts, Backend: Django + Scrapy, Database: PostgreSQL, Data: Tiket.com/Traveloka - Price history, alert when drops, predict best time to buy",
+    "📰 **News Aggregator for Tech Topics** - Frontend: Svelte + SvelteKit, Backend: FastAPI + Redis, Database: PostgreSQL, Data: RSS/CNN/Detik - AI summarize news, sentiment analysis, topic clustering",
+    "💼 **Indonesia Job Portal Aggregator** - Frontend: React + Redux, Backend: Laravel + PostgreSQL, Database: PostgreSQL, Data: Scraping Jobstreet/Glints/LinkedIn - Filter salary, remote-friendly, startup-only jobs",
+    "📱 **Local Event Discovery (Indonesia)** - Frontend: Next.js + Leaflet Maps, Backend: Go + GORM, Database: PostgreSQL, Data: Goers/Eventory API - Filter by city, free/paid, category, map-based discovery",
+    "📊 **Cryptocurrency & IHSG Dashboard** - Frontend: Vue 3 + Chart.js, Backend: Node.js + Socket.io, Database: InfluxDB, Data: CoinGecko/Yahoo Finance API - Portfolio tracker, alerts, technical indicators",
+    "🌾 **Indonesian Food Price Predictor** - Frontend: React + Material UI, Backend: FastAPI + Scikit-learn, Database: PostgreSQL, Data: data.go.id - ML predict price movement, benefit analysis untuk consumers",
+    "🏗️ **Construction Material Price Monitor** - Frontend: Next.js + D3.js, Backend: Spring Boot + WebSocket, Database: PostgreSQL, Data: Scraping harga besi/semen - Real-time alerts, historical trends, prediction",
+    "⚡ **Peer-to-Peer Energy Sharing** - Frontend: React + Tailwind, Backend: Node.js + MQTT, Database: InfluxDB, Data: Smart meter APIs - Share solar energy antar rumah tangga, smart grid tracking",
+    "📚 **Secondhand Book Exchange** - Frontend: SvelteKit + Leaflet, Backend: Express + MongoDB, Database: MongoDB, Data: Open Library API - Tukar buku bekas, location-based matching, sustainability",
+    "🌊 **Maritime Cargo Tracker (Indonesia)** - Frontend: Vue.js + Mapbox, Backend: Go + gRPC, Database: PostgreSQL, Data: Shipping APIs - Tracking kapal kargo, estimasi arrival, port monitoring",
+    "📋 **Tabungan Kelompok (Group Savings)** - Frontend: React + Tailwind, Backend: Node.js + Express, Database: PostgreSQL, Data: Real-time updates - Community savings, transparent voting for spending",
+    "🎯 **Skill Exchange Network** - Frontend: Next.js + Prisma, Backend: Django + DRF, Database: PostgreSQL, Data: User profiles - Tukar skill (coding↔design), matching system, review",
 ]
 
 def get_reminder_message() -> str:
@@ -33,22 +32,23 @@ def get_reminder_message() -> str:
     message = f"""
 ⏰ **Reminder: Project Full Stack Web Programming**
 
-Hai semuanya! 👋 Masih dalam proses brainstorming ide project web?
+Hai semuanya! 👋 Still brainstorming for project ideas?
 
-Berikut beberapa ide unik yang bisa kalian pertimbangkan:
+Berikut ide-ide yang utilize PUBLIC DATA dari internet:
 
 {ideas_text}
 
 📌 **Tips:**
-• Pilih tech stack yang kalian Kuasai
-• Pastikan bisa deploy (bisa pakai Vercel, Railway, Render gratis)
-• Documentation penting untuk nilai tambahan
+• Pilih yang sesuai skill + passion
+• Public data bisa dari API, web scraping, atau open data Indonesia
+• Bisa deploy di Vercel/Railway/Netlify (gratis!)
+• Tech stack boleh berbeda dari rekomendasi di atas
 
 ⏰ **Deadline: 13 Juni 2026**
 
 Kirim ide kalian di channel kelas masing-masing ya!
 
-#ProjectReminder #FullStackWeb
+#ProjectReminder #PublicData #FullStackWeb
 """
     return message.strip()
 
