@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "command": "pip install -e . && python -m teaching_assistant.main"
+    "command": "pip install --no-cache-dir -e . && python -m teaching_assistant.main"
   }
 }
