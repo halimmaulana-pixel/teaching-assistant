@@ -1,9 +1,10 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "NIXPACKS",
+    "buildCommand": "pip install -r requirements.txt"
   },
   "deploy": {
-    "command": "pip install -r requirements.txt && PYTHONPATH=. python teaching_assistant/main.py"
+    "command": "PYTHONPATH=.:$PYTHONPATH python teaching_assistant/main.py"
   }
 }
