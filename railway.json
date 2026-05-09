@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "RAILPACK",
+    "python": "3.10"
+  },
+  "deploy": {
+    "command": "python -m teaching_assistant.main"
+  }
+}
