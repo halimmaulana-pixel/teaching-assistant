@@ -74,6 +74,18 @@ async def init_db():
                 FOREIGN KEY (submission_id) REFERENCES group_submissions(id)
             )
         """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS server_members (
+                discord_id TEXT PRIMARY KEY,
+                username TEXT,
+                nickname TEXT,
+                display_name TEXT,
+                roles TEXT,
+                joined_at TEXT,
+                synced_at TEXT,
+                class_channel TEXT
+            )
+        """)
         await db.commit()
 
 async def create_assignment(title: str, description: str, deadline: str,
@@ -325,3 +337,56 @@ async def get_assignment_by_thread_slug(thread_slug: str) -> Optional[dict]:
                         "grading_prompt": row[7], "status": row[8], "assignment_type": assignment_type
                     }
     return None
+
+async def upsert_server_member(discord_id: str, username: str, nickname: str,
+                               display_name: str, roles: List[str],
+                               joined_at: str, class_channel: str = None) -> None:
+    """Insert or update a server member."""
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        await db.execute("""
+            INSERT INTO server_members (discord_id, username, nickname, display_name, roles, joined_at, synced_at, class_channel)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(discord_id) DO UPDATE SET
+                username = excluded.username,
+                nickname = excluded.nickname,
+                display_name = excluded.display_name,
+                roles = excluded.roles,
+                synced_at = excluded.synced_at,
+                class_channel = COALESCE(excluded.class_channel, server_members.class_channel)
+        """, (discord_id, username, nickname, display_name, json.dumps(roles), joined_at, datetime.now().isoformat(), class_channel))
+        await db.commit()
+
+async def get_all_server_members() -> List[dict]:
+    """Get all server members."""
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute("SELECT * FROM server_members ORDER BY username") as cursor:
+            members = []
+            async for row in cursor:
+                members.append({
+                    "discord_id": row[0], "username": row[1], "nickname": row[2],
+                    "display_name": row[3], "roles": json.loads(row[4]) if row[4] else [],
+                    "joined_at": row[5], "synced_at": row[6], "class_channel": row[7]
+                })
+            return members
+
+async def get_server_member_count() -> int:
+    """Get total count of synced server members."""
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute("SELECT COUNT(*) FROM server_members") as cursor:
+            row = await cursor.fetchone()
+            return row[0] if row else 0
+
+async def get_members_by_role(role_name: str) -> List[dict]:
+    """Get members with a specific role."""
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        members = []
+        async with db.execute("SELECT * FROM server_members") as cursor:
+            async for row in cursor:
+                roles = json.loads(row[4]) if row[4] else []
+                if role_name in roles:
+                    members.append({
+                        "discord_id": row[0], "username": row[1], "nickname": row[2],
+                        "display_name": row[3], "roles": roles,
+                        "joined_at": row[5], "synced_at": row[6], "class_channel": row[7]
+                    })
+        return members

@@ -96,8 +96,9 @@ class Bot:
             await handle_list_assignments(message, self)
         elif content.startswith("!remind-ideas"):
             await self.trigger_reminder(message)
+        elif content.startswith("!sync-members"):
+            await self.handle_sync_members(message)
         # elif content.startswith("!insight"):
-        #     await self.trigger_insight(message)
 
     async def trigger_reminder(self, message):
         """Manually trigger project idea reminder."""
@@ -134,8 +135,13 @@ class Bot:
     #     success = await send_insight_to_channel(self, "umum")
     #     if success:
     #         await message.reply("✅ Insight posted to #umum!")
-    #     else:
+            #     else:
     #         await message.reply("❌ Gagal mengirim insight. Pastikan bot terhubung ke server.")
+
+    async def handle_sync_members(self, message: discord.Message):
+        """Handle !sync-members command."""
+        from teaching_assistant.commands.sync_members import handle_sync_members
+        await handle_sync_members(message, self)
 
     async def handle_submission(self, message: discord.Message, thread: discord.Thread):
         """Handle assignment submission in thread."""
