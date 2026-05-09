@@ -1,6 +1,7 @@
 """Discord bot client for Teaching Assistant."""
 import logging
 import os
+import asyncio
 from typing import Optional
 import discord
 from discord import Intents
@@ -29,6 +30,7 @@ class Bot:
         intents = Intents.default()
         intents.message_content = True
         intents.guilds = True
+        intents.members = True
 
         self.client = discord.Client(intents=intents)
 

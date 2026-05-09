@@ -26,7 +26,19 @@ async def handle_sync_members(message: discord.Message, bot):
     class_channel_count = 0
 
     try:
-        for member in guild.members:
+        await message.reply("🔄 Fetching members dari Discord...")
+
+        async def fetch_members():
+            """Fetch all members from guild."""
+            members_list = []
+            async for member in guild.config.fetch_members(limit=150):
+                members_list.append(member)
+            return members_list
+
+        members = await fetch_members()
+        await message.reply(f"🔄 Found **{len(members)}** members. Starting sync...")
+
+        for member in members:
             if member.bot:
                 continue
 
