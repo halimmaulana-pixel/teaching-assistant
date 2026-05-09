@@ -52,6 +52,20 @@ Kirim ide kalian di channel kelas masing-masing ya!
 """
     return message.strip()
 
+async def send_reminder_to_umum(bot):
+    """Send reminder to #umum channel."""
+    guild = bot.client.get_guild(bot.guild_id)
+    if not guild:
+        return False
+
+    channel = discord.utils.get(guild.text_channels, name="umum")
+    if not channel:
+        return False
+
+    message = get_reminder_message()
+    await channel.send(message)
+    return True
+
 async def start_reminder_scheduler(bot, interval_hours: int = 2):
     """Start the reminder scheduler."""
     logger.info(f"Reminder scheduler started - checking every {interval_hours} hours")

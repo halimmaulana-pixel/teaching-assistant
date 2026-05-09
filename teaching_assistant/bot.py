@@ -85,6 +85,18 @@ class Bot:
         elif content.startswith("!list-assignments"):
             from teaching_assistant.commands.general import handle_list_assignments
             await handle_list_assignments(message, self)
+        elif content.startswith("!remind-ideas"):
+            await self.trigger_reminder(message)
+
+    async def trigger_reminder(self, message):
+        """Manually trigger project idea reminder."""
+        from teaching_assistant.services.reminder_scheduler import send_reminder_to_umum
+
+        success = await send_reminder_to_umum(self)
+        if success:
+            await message.reply("✅ Reminder project ideas sent to #umum!")
+        else:
+            await message.reply("❌ Gagal mengirim reminder. Pastikan bot terhubung ke server.")
 
     async def handle_submission(self, message: discord.Message, thread: discord.Thread):
         """Handle assignment submission in thread."""
