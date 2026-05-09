@@ -38,7 +38,7 @@ class Bot:
             logger.info(f"Guild ID: {self.guild_id}")
 
             asyncio.create_task(self.start_reminder_scheduler())
-            asyncio.create_task(self.start_insight_scheduler())
+            # asyncio.create_task(self.start_insight_scheduler())  # Disabled sementara
 
         async def start_reminder_scheduler(self):
             """Start the project idea reminder scheduler."""
@@ -48,13 +48,13 @@ class Bot:
             except Exception as e:
                 logger.error(f"Reminder scheduler error: {e}")
 
-        async def start_insight_scheduler(self):
-            """Start the theory/insight scheduler."""
-            from teaching_assistant.services.theory_insights_scheduler import start_insight_scheduler
-            try:
-                await start_insight_scheduler(self, interval_hours=1)
-            except Exception as e:
-                logger.error(f"Insight scheduler error: {e}")
+        # async def start_insight_scheduler(self):
+        #     """Start the theory/insight scheduler."""
+        #     from teaching_assistant.services.theory_insights_scheduler import start_insight_scheduler
+        #     try:
+        #         await start_insight_scheduler(self, interval_hours=1)
+        #     except Exception as e:
+        #         logger.error(f"Insight scheduler error: {e}")
 
         @self.client.event
         async def on_message(message: discord.Message):
@@ -96,8 +96,8 @@ class Bot:
             await handle_list_assignments(message, self)
         elif content.startswith("!remind-ideas"):
             await self.trigger_reminder(message)
-        elif content.startswith("!insight"):
-            await self.trigger_insight(message)
+        # elif content.startswith("!insight"):
+        #     await self.trigger_insight(message)
 
     async def trigger_reminder(self, message):
         """Manually trigger project idea reminder."""
@@ -109,33 +109,33 @@ class Bot:
         else:
             await message.reply("❌ Gagal mengirim reminder. Pastikan bot terhubung ke server.")
 
-    async def trigger_insight(self, message):
-        """Manually trigger insight post."""
-        from teaching_assistant.services.theory_insights_scheduler import send_insight_to_channel
-
-        parts = message.content.split()
-        category = parts[1] if len(parts) > 1 else None
-
-        if category:
-            from teaching_assistant.services.theory_insights_scheduler import INSIGHTS, format_insight
-            category_map = {
-                "web": "web_dev",
-                "se": "software_engineering",
-                "backend": "backend",
-                "devops": "devops"
-            }
-            cat_key = category_map.get(category.lower())
-            if cat_key and cat_key in INSIGHTS:
-                insight = {"category": cat_key, **INSIGHTS[cat_key][0]}
-                formatted = format_insight(insight)
-                await message.reply(f"📚 **Insight — {category.upper()}**\n\n{formatted}")
-                return
-
-        success = await send_insight_to_channel(self, "umum")
-        if success:
-            await message.reply("✅ Insight posted to #umum!")
-        else:
-            await message.reply("❌ Gagal mengirim insight. Pastikan bot terhubung ke server.")
+    # async def trigger_insight(self, message):
+    #     """Manually trigger insight post."""
+    #     from teaching_assistant.services.theory_insights_scheduler import send_insight_to_channel
+    #
+    #     parts = message.content.split()
+    #     category = parts[1] if len(parts) > 1 else None
+    #
+    #     if category:
+    #         from teaching_assistant.services.theory_insights_scheduler import INSIGHTS, format_insight
+    #         category_map = {
+    #             "web": "web_dev",
+    #             "se": "software_engineering",
+    #             "backend": "backend",
+    #             "devops": "devops"
+    #         }
+    #         cat_key = category_map.get(category.lower())
+    #         if cat_key and cat_key in INSIGHTS:
+    #             insight = {"category": cat_key, **INSIGHTS[cat_key][0]}
+    #             formatted = format_insight(insight)
+    #             await message.reply(f"📚 **Insight — {category.upper()}**\n\n{formatted}")
+    #             return
+    #
+    #     success = await send_insight_to_channel(self, "umum")
+    #     if success:
+    #         await message.reply("✅ Insight posted to #umum!")
+    #     else:
+    #         await message.reply("❌ Gagal mengirim insight. Pastikan bot terhubung ke server.")
 
     async def handle_submission(self, message: discord.Message, thread: discord.Thread):
         """Handle assignment submission in thread."""
