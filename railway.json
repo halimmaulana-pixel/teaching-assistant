@@ -1,9 +1,9 @@
 {
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "RAILPACK",
-    "python": "3.10"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "command": "python -m teaching_assistant.main"
+    "command": "pip install -e . && python -m teaching_assistant.main"
   }
 }
