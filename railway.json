@@ -5,6 +5,6 @@
     "buildCommand": "pip install -r requirements.txt"
   },
   "deploy": {
-    "command": "PYTHONPATH=.:$PYTHONPATH python teaching_assistant/main.py"
+    "command": "python -c 'import sys; sys.path.insert(0, \".\"); exec(open(\"teaching_assistant/main.py\").read())'"
   }
 }
